@@ -28,7 +28,7 @@ import time
 
 
 
-class file_source_test(gr.top_block, Qt.QWidget):
+class upper_freq(gr.top_block, Qt.QWidget):
 
     def __init__(self):
         gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
@@ -51,7 +51,7 @@ class file_source_test(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("gnuradio/flowgraphs", "file_source_test")
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "upper_freq")
 
         try:
             geometry = self.settings.value("geometry")
@@ -64,37 +64,34 @@ class file_source_test(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.func_noise_floor = func_noise_floor = 0
         self.vec_len = vec_len = 4096
         self.samp_rate = samp_rate = 30.72E+06
         self.lna_makeup_gain = lna_makeup_gain = -12
-        self.freq_2 = freq_2 = 2.435E+09
-        self.freq_1 = freq_1 = 2.405E+09
-        self.freq = freq = 2.405E+09
-        self.dec = dec = 1000
-        self.bound = bound = func_noise_floor * 0.95
+        self.func_probe_noise = func_probe_noise = 0
+        self.freq = freq = 2.435E+09
+        self.filesink_directory = filesink_directory = "/home/antfarm/Documents/Antman_GNURadio_Code/Results/"
 
         ##################################################
         # Blocks
         ##################################################
 
         self.probe_noise_floor = blocks.probe_signal_f()
-        def _func_noise_floor_probe():
+        def _func_probe_noise_probe():
           self.flowgraph_started.wait()
           while True:
 
             val = self.probe_noise_floor.level()
             try:
               try:
-                self.doc.add_next_tick_callback(functools.partial(self.set_func_noise_floor,val))
+                self.doc.add_next_tick_callback(functools.partial(self.set_func_probe_noise,val))
               except AttributeError:
-                self.set_func_noise_floor(val)
+                self.set_func_probe_noise(val)
             except AttributeError:
               pass
             time.sleep(1.0 / (10))
-        _func_noise_floor_thread = threading.Thread(target=_func_noise_floor_probe)
-        _func_noise_floor_thread.daemon = True
-        _func_noise_floor_thread.start()
+        _func_probe_noise_thread = threading.Thread(target=_func_probe_noise_probe)
+        _func_probe_noise_thread.daemon = True
+        _func_probe_noise_thread.start()
         self.soapy_limesdr_source_0 = None
         dev = 'driver=lime'
         stream_args = ''
@@ -107,24 +104,24 @@ class file_source_test(gr.top_block, Qt.QWidget):
         self.soapy_limesdr_source_0.set_bandwidth(0, 0.0)
         self.soapy_limesdr_source_0.set_frequency(0, freq)
         self.soapy_limesdr_source_0.set_frequency_correction(0, 0)
-        self.soapy_limesdr_source_0.set_gain(0, min(max(0, -12.0), 61.0))
-        self.qtgui_vector_sink_f_1_0 = qtgui.vector_sink_f(
+        self.soapy_limesdr_source_0.set_gain(0, min(max(20.0, -12.0), 61.0))
+        self.qtgui_vector_sink_f_0_0 = qtgui.vector_sink_f(
             vec_len,
             0,
             1.0,
             "x-Axis",
             "y-Axis",
-            "Spectral Occupancy",
+            "",
             1, # Number of inputs
             None # parent
         )
-        self.qtgui_vector_sink_f_1_0.set_update_time(0.10)
-        self.qtgui_vector_sink_f_1_0.set_y_axis(0, 1100)
-        self.qtgui_vector_sink_f_1_0.enable_autoscale(False)
-        self.qtgui_vector_sink_f_1_0.enable_grid(False)
-        self.qtgui_vector_sink_f_1_0.set_x_axis_units("")
-        self.qtgui_vector_sink_f_1_0.set_y_axis_units("")
-        self.qtgui_vector_sink_f_1_0.set_ref_level(0)
+        self.qtgui_vector_sink_f_0_0.set_update_time(0.10)
+        self.qtgui_vector_sink_f_0_0.set_y_axis(0, 550)
+        self.qtgui_vector_sink_f_0_0.enable_autoscale(False)
+        self.qtgui_vector_sink_f_0_0.enable_grid(False)
+        self.qtgui_vector_sink_f_0_0.set_x_axis_units("")
+        self.qtgui_vector_sink_f_0_0.set_y_axis_units("")
+        self.qtgui_vector_sink_f_0_0.set_ref_level(0)
 
 
         labels = ['', '', '', '', '',
@@ -138,22 +135,22 @@ class file_source_test(gr.top_block, Qt.QWidget):
 
         for i in range(1):
             if len(labels[i]) == 0:
-                self.qtgui_vector_sink_f_1_0.set_line_label(i, "Data {0}".format(i))
+                self.qtgui_vector_sink_f_0_0.set_line_label(i, "Data {0}".format(i))
             else:
-                self.qtgui_vector_sink_f_1_0.set_line_label(i, labels[i])
-            self.qtgui_vector_sink_f_1_0.set_line_width(i, widths[i])
-            self.qtgui_vector_sink_f_1_0.set_line_color(i, colors[i])
-            self.qtgui_vector_sink_f_1_0.set_line_alpha(i, alphas[i])
+                self.qtgui_vector_sink_f_0_0.set_line_label(i, labels[i])
+            self.qtgui_vector_sink_f_0_0.set_line_width(i, widths[i])
+            self.qtgui_vector_sink_f_0_0.set_line_color(i, colors[i])
+            self.qtgui_vector_sink_f_0_0.set_line_alpha(i, alphas[i])
 
-        self._qtgui_vector_sink_f_1_0_win = sip.wrapinstance(self.qtgui_vector_sink_f_1_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_vector_sink_f_1_0_win)
+        self._qtgui_vector_sink_f_0_0_win = sip.wrapinstance(self.qtgui_vector_sink_f_0_0.qwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_vector_sink_f_0_0_win)
         self.qtgui_vector_sink_f_0 = qtgui.vector_sink_f(
             vec_len,
             0,
             1.0,
             "x-Axis",
             "y-Axis",
-            "Smoothed Out FFT",
+            "Average FFT",
             1, # Number of inputs
             None # parent
         )
@@ -194,7 +191,7 @@ class file_source_test(gr.top_block, Qt.QWidget):
             None # parent
         )
         self.qtgui_number_sink_0.set_update_time(0.10)
-        self.qtgui_number_sink_0.set_title("Mean Power Spectral Density")
+        self.qtgui_number_sink_0.set_title("Average Noise Floor across Spectrum")
 
         labels = ['', '', '', '', '',
             '', '', '', '', '']
@@ -220,11 +217,11 @@ class file_source_test(gr.top_block, Qt.QWidget):
         self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_number_sink_0_win)
         self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
-            vec_len, #size
+            4096, #size
             window.WIN_BLACKMAN_hARRIS, #wintype
             freq, #fc
             samp_rate, #bw
-            "", #name
+            "FFT", #name
             1,
             None # parent
         )
@@ -261,85 +258,78 @@ class file_source_test(gr.top_block, Qt.QWidget):
 
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
-        self.fft_vxx_0 = fft.fft_vcc(4096, True, window.blackmanharris(4096), True, 1)
+        self.fft_vxx_0 = fft.fft_vcc(vec_len, True, window.blackmanharris(vec_len), True, 1)
         self.blocks_vector_to_stream_0_0 = blocks.vector_to_stream(gr.sizeof_float*1, vec_len)
         self.blocks_vector_to_stream_0 = blocks.vector_to_stream(gr.sizeof_float*1, vec_len)
-        self.blocks_threshold_ff_0 = blocks.threshold_ff((func_noise_floor+3), (func_noise_floor+3), 0)
+        self.blocks_threshold_ff_0 = blocks.threshold_ff(func_probe_noise, func_probe_noise, 0)
         self.blocks_stream_to_vector_1 = blocks.stream_to_vector(gr.sizeof_float*1, vec_len)
         self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, vec_len)
-        self.blocks_nlog10_ff_0_0_0 = blocks.nlog10_ff(10, 1, 0)
+        self.blocks_nlog10_ff_0_1 = blocks.nlog10_ff(1, 1, 0)
         self.blocks_nlog10_ff_0_0 = blocks.nlog10_ff(10, vec_len, 0)
         self.blocks_nlog10_ff_0 = blocks.nlog10_ff(10, 1, 0)
-        self.blocks_multiply_const_xx_1_0 = blocks.multiply_const_ff(1/vec_len, vec_len)
-        self.blocks_multiply_const_xx_1 = blocks.multiply_const_ff(1/vec_len, 1)
+        self.blocks_multiply_const_xx_0_0_0 = blocks.multiply_const_ff(1/vec_len, vec_len)
+        self.blocks_multiply_const_xx_0_0 = blocks.multiply_const_ff(1/vec_len, 1)
         self.blocks_multiply_const_xx_0 = blocks.multiply_const_cc(1/vec_len, vec_len)
-        self.blocks_integrate_xx_1 = blocks.integrate_ff(1000, vec_len)
-        self.blocks_integrate_xx_0_0 = blocks.integrate_ff(dec, vec_len)
-        self.blocks_integrate_xx_0 = blocks.integrate_ff(vec_len, 1)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vec_len, 'FFT_Windows.bin', False)
-        self.blocks_file_sink_0.set_unbuffered(False)
+        self.blocks_integrate_xx_1 = blocks.integrate_ff(500, vec_len)
+        self.blocks_integrate_xx_0_0 = blocks.integrate_ff(vec_len, 1)
+        self.blocks_integrate_xx_0 = blocks.integrate_ff(1000, vec_len)
+        self.blocks_file_sink_0_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0_0_0.set_unbuffered(False)
+        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0_0.set_unbuffered(False)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(vec_len)
-        self.blocks_add_const_vxx_0_0_0 = blocks.add_const_ff(lna_makeup_gain)
-        self.blocks_add_const_vxx_0_0 = blocks.add_const_ff(lna_makeup_gain)
-        self.blocks_add_const_vxx_0 = blocks.add_const_vff([lna_makeup_gain]*vec_len)
+        self.blocks_add_const_vxx_0_1 = blocks.add_const_ff(lna_makeup_gain)
+        self.blocks_add_const_vxx_0_0 = blocks.add_const_vff([lna_makeup_gain]*vec_len)
 
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_add_const_vxx_0, 0), (self.blocks_file_sink_0, 0))
-        self.connect((self.blocks_add_const_vxx_0, 0), (self.qtgui_vector_sink_f_0, 0))
-        self.connect((self.blocks_add_const_vxx_0_0, 0), (self.probe_noise_floor, 0))
-        self.connect((self.blocks_add_const_vxx_0_0, 0), (self.qtgui_number_sink_0, 0))
-        self.connect((self.blocks_add_const_vxx_0_0_0, 0), (self.blocks_threshold_ff_0, 0))
-        self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_integrate_xx_0_0, 0))
+        self.connect((self.blocks_add_const_vxx_0_0, 0), (self.blocks_file_sink_0_0, 0))
+        self.connect((self.blocks_add_const_vxx_0_0, 0), (self.qtgui_vector_sink_f_0, 0))
+        self.connect((self.blocks_add_const_vxx_0_1, 0), (self.blocks_threshold_ff_0, 0))
+        self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_integrate_xx_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_vector_to_stream_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_vector_to_stream_0_0, 0))
-        self.connect((self.blocks_integrate_xx_0, 0), (self.blocks_multiply_const_xx_1, 0))
-        self.connect((self.blocks_integrate_xx_0_0, 0), (self.blocks_multiply_const_xx_1_0, 0))
-        self.connect((self.blocks_integrate_xx_1, 0), (self.qtgui_vector_sink_f_1_0, 0))
+        self.connect((self.blocks_integrate_xx_0, 0), (self.blocks_multiply_const_xx_0_0_0, 0))
+        self.connect((self.blocks_integrate_xx_0_0, 0), (self.blocks_multiply_const_xx_0_0, 0))
+        self.connect((self.blocks_integrate_xx_1, 0), (self.blocks_file_sink_0_0_0, 0))
+        self.connect((self.blocks_integrate_xx_1, 0), (self.qtgui_vector_sink_f_0_0, 0))
         self.connect((self.blocks_multiply_const_xx_0, 0), (self.blocks_complex_to_mag_squared_0, 0))
-        self.connect((self.blocks_multiply_const_xx_1, 0), (self.blocks_nlog10_ff_0, 0))
-        self.connect((self.blocks_multiply_const_xx_1_0, 0), (self.blocks_nlog10_ff_0_0, 0))
-        self.connect((self.blocks_nlog10_ff_0, 0), (self.blocks_add_const_vxx_0_0, 0))
-        self.connect((self.blocks_nlog10_ff_0_0, 0), (self.blocks_add_const_vxx_0, 0))
-        self.connect((self.blocks_nlog10_ff_0_0_0, 0), (self.blocks_add_const_vxx_0_0_0, 0))
+        self.connect((self.blocks_multiply_const_xx_0_0, 0), (self.blocks_nlog10_ff_0, 0))
+        self.connect((self.blocks_multiply_const_xx_0_0_0, 0), (self.blocks_nlog10_ff_0_0, 0))
+        self.connect((self.blocks_nlog10_ff_0, 0), (self.probe_noise_floor, 0))
+        self.connect((self.blocks_nlog10_ff_0, 0), (self.qtgui_number_sink_0, 0))
+        self.connect((self.blocks_nlog10_ff_0_0, 0), (self.blocks_add_const_vxx_0_0, 0))
+        self.connect((self.blocks_nlog10_ff_0_1, 0), (self.blocks_add_const_vxx_0_1, 0))
         self.connect((self.blocks_stream_to_vector_0, 0), (self.fft_vxx_0, 0))
         self.connect((self.blocks_stream_to_vector_1, 0), (self.blocks_integrate_xx_1, 0))
         self.connect((self.blocks_threshold_ff_0, 0), (self.blocks_stream_to_vector_1, 0))
-        self.connect((self.blocks_vector_to_stream_0, 0), (self.blocks_integrate_xx_0, 0))
-        self.connect((self.blocks_vector_to_stream_0_0, 0), (self.blocks_nlog10_ff_0_0_0, 0))
+        self.connect((self.blocks_vector_to_stream_0, 0), (self.blocks_integrate_xx_0_0, 0))
+        self.connect((self.blocks_vector_to_stream_0_0, 0), (self.blocks_nlog10_ff_0_1, 0))
         self.connect((self.fft_vxx_0, 0), (self.blocks_multiply_const_xx_0, 0))
         self.connect((self.soapy_limesdr_source_0, 0), (self.blocks_stream_to_vector_0, 0))
         self.connect((self.soapy_limesdr_source_0, 0), (self.qtgui_freq_sink_x_0, 0))
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("gnuradio/flowgraphs", "file_source_test")
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "upper_freq")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
 
         event.accept()
 
-    def get_func_noise_floor(self):
-        return self.func_noise_floor
-
-    def set_func_noise_floor(self, func_noise_floor):
-        self.func_noise_floor = func_noise_floor
-        self.set_bound(self.func_noise_floor * 0.95)
-        self.blocks_threshold_ff_0.set_hi((self.func_noise_floor+3))
-        self.blocks_threshold_ff_0.set_lo((self.func_noise_floor+3))
-
     def get_vec_len(self):
         return self.vec_len
 
     def set_vec_len(self, vec_len):
         self.vec_len = vec_len
-        self.blocks_add_const_vxx_0.set_k([self.lna_makeup_gain]*self.vec_len)
+        self.blocks_add_const_vxx_0_0.set_k([self.lna_makeup_gain]*self.vec_len)
         self.blocks_multiply_const_xx_0.set_k(1/self.vec_len)
-        self.blocks_multiply_const_xx_1.set_k(1/self.vec_len)
-        self.blocks_multiply_const_xx_1_0.set_k(1/self.vec_len)
+        self.blocks_multiply_const_xx_0_0.set_k(1/self.vec_len)
+        self.blocks_multiply_const_xx_0_0_0.set_k(1/self.vec_len)
+        self.fft_vxx_0.set_window(window.blackmanharris(self.vec_len))
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -354,21 +344,16 @@ class file_source_test(gr.top_block, Qt.QWidget):
 
     def set_lna_makeup_gain(self, lna_makeup_gain):
         self.lna_makeup_gain = lna_makeup_gain
-        self.blocks_add_const_vxx_0.set_k([self.lna_makeup_gain]*self.vec_len)
-        self.blocks_add_const_vxx_0_0.set_k(self.lna_makeup_gain)
-        self.blocks_add_const_vxx_0_0_0.set_k(self.lna_makeup_gain)
+        self.blocks_add_const_vxx_0_0.set_k([self.lna_makeup_gain]*self.vec_len)
+        self.blocks_add_const_vxx_0_1.set_k(self.lna_makeup_gain)
 
-    def get_freq_2(self):
-        return self.freq_2
+    def get_func_probe_noise(self):
+        return self.func_probe_noise
 
-    def set_freq_2(self, freq_2):
-        self.freq_2 = freq_2
-
-    def get_freq_1(self):
-        return self.freq_1
-
-    def set_freq_1(self, freq_1):
-        self.freq_1 = freq_1
+    def set_func_probe_noise(self, func_probe_noise):
+        self.func_probe_noise = func_probe_noise
+        self.blocks_threshold_ff_0.set_hi(self.func_probe_noise)
+        self.blocks_threshold_ff_0.set_lo(self.func_probe_noise)
 
     def get_freq(self):
         return self.freq
@@ -378,22 +363,18 @@ class file_source_test(gr.top_block, Qt.QWidget):
         self.qtgui_freq_sink_x_0.set_frequency_range(self.freq, self.samp_rate)
         self.soapy_limesdr_source_0.set_frequency(0, self.freq)
 
-    def get_dec(self):
-        return self.dec
+    def get_filesink_directory(self):
+        return self.filesink_directory
 
-    def set_dec(self, dec):
-        self.dec = dec
-
-    def get_bound(self):
-        return self.bound
-
-    def set_bound(self, bound):
-        self.bound = bound
+    def set_filesink_directory(self, filesink_directory):
+        self.filesink_directory = filesink_directory
+        self.blocks_file_sink_0_0.open(self.filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
+        self.blocks_file_sink_0_0_0.open(self.filesink_directory+"occupancy-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
 
 
 
 
-def main(top_block_cls=file_source_test, options=None):
+def main(top_block_cls=upper_freq, options=None):
 
     qapp = Qt.QApplication(sys.argv)
 

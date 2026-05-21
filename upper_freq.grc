@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: file_source_test
+    id: upper_freq
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -33,55 +33,19 @@ options:
     state: enabled
 
 blocks:
-- name: bound
+- name: filesink_directory
   id: variable
   parameters:
     comment: ''
-    value: func_noise_floor * 0.95
+    value: '"/home/antfarm/Documents/Antman_GNURadio_Code/Results/"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1104, 44.0]
-    rotation: 0
-    state: enabled
-- name: dec
-  id: variable
-  parameters:
-    comment: ''
-    value: '1000'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [528, 12.0]
+    coordinate: [1056, 136.0]
     rotation: 0
     state: enabled
 - name: freq
-  id: variable
-  parameters:
-    comment: ''
-    value: '2.405E+09'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [416, 12.0]
-    rotation: 0
-    state: enabled
-- name: freq_1
-  id: variable
-  parameters:
-    comment: ''
-    value: '2.405E+09'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [632, 20.0]
-    rotation: 0
-    state: enabled
-- name: freq_2
   id: variable
   parameters:
     comment: ''
@@ -90,10 +54,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 20.0]
+    coordinate: [320, 12.0]
     rotation: 0
     state: enabled
-- name: func_noise_floor
+- name: func_probe_noise
   id: variable_function_probe
   parameters:
     block_id: probe_noise_floor
@@ -106,7 +70,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [904, 28.0]
+    coordinate: [1792, 52.0]
     rotation: 0
     state: enabled
 - name: lna_makeup_gain
@@ -118,7 +82,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1240, 92.0]
+    coordinate: [1568, 68.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -142,10 +106,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 12.0]
+    coordinate: [456, 4.0]
     rotation: 0
     state: enabled
-- name: blocks_add_const_vxx_0
+- name: blocks_add_const_vxx_0_0
   id: blocks_add_const_vxx
   parameters:
     affinity: ''
@@ -160,10 +124,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2216, 444.0]
+    coordinate: [2072, 396.0]
     rotation: 0
     state: enabled
-- name: blocks_add_const_vxx_0_0
+- name: blocks_add_const_vxx_0_1
   id: blocks_add_const_vxx
   parameters:
     affinity: ''
@@ -178,25 +142,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2280, 260.0]
-    rotation: 0
-    state: enabled
-- name: blocks_add_const_vxx_0_0_0
-  id: blocks_add_const_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    const: lna_makeup_gain
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1696, 820.0]
+    coordinate: [1760, 532.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_mag_squared_0
@@ -204,7 +150,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: The bin width is 7.5 kHz
+    comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     vlen: vec_len
@@ -212,17 +158,17 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 452.0]
+    coordinate: [1128, 396.0]
     rotation: 0
     state: enabled
-- name: blocks_file_sink_0
+- name: blocks_file_sink_0_0
   id: blocks_file_sink
   parameters:
     affinity: ''
     alias: ''
-    append: 'False'
+    append: 'True'
     comment: ''
-    file: FFT_Windows.bin
+    file: filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
     type: float
     unbuffered: 'False'
     vlen: vec_len
@@ -230,46 +176,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2504, 548.0]
+    coordinate: [2384, 452.0]
     rotation: 0
     state: enabled
-- name: blocks_integrate_xx_0
-  id: blocks_integrate_xx
+- name: blocks_file_sink_0_0_0
+  id: blocks_file_sink
   parameters:
     affinity: ''
     alias: ''
+    append: 'True'
     comment: ''
-    decim: vec_len
-    maxoutbuf: '0'
-    minoutbuf: '0'
+    file: filesink_directory+"occupancy-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
     type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1656, 260.0]
-    rotation: 0
-    state: enabled
-- name: blocks_integrate_xx_0_0
-  id: blocks_integrate_xx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    decim: dec
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: float
+    unbuffered: 'False'
     vlen: vec_len
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1488, 444.0]
+    coordinate: [2584, 724.0]
     rotation: 0
     state: enabled
-- name: blocks_integrate_xx_1
+- name: blocks_integrate_xx_0
   id: blocks_integrate_xx
   parameters:
     affinity: ''
@@ -284,7 +212,43 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2200, 708.0]
+    coordinate: [1384, 396.0]
+    rotation: 0
+    state: enabled
+- name: blocks_integrate_xx_0_0
+  id: blocks_integrate_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: vec_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1616, 276.0]
+    rotation: 0
+    state: enabled
+- name: blocks_integrate_xx_1
+  id: blocks_integrate_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '500'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: vec_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2328, 604.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_xx_0
@@ -302,10 +266,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [928, 444.0]
+    coordinate: [888, 388.0]
     rotation: 0
     state: enabled
-- name: blocks_multiply_const_xx_1
+- name: blocks_multiply_const_xx_0_0
   id: blocks_multiply_const_xx
   parameters:
     affinity: ''
@@ -320,10 +284,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1864, 260.0]
+    coordinate: [1832, 276.0]
     rotation: 0
     state: enabled
-- name: blocks_multiply_const_xx_1_0
+- name: blocks_multiply_const_xx_0_0_0
   id: blocks_multiply_const_xx
   parameters:
     affinity: ''
@@ -338,7 +302,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1712, 444.0]
+    coordinate: [1616, 396.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0
@@ -356,7 +320,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2112, 260.0]
+    coordinate: [2056, 276.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0_0
@@ -374,10 +338,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1976, 436.0]
+    coordinate: [1840, 388.0]
     rotation: 0
     state: enabled
-- name: blocks_nlog10_ff_0_0_0
+- name: blocks_nlog10_ff_0_1
   id: blocks_nlog10_ff
   parameters:
     affinity: ''
@@ -386,13 +350,13 @@ blocks:
     k: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
-    n: '10'
+    n: '1'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1592, 716.0]
+    coordinate: [1616, 532.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_vector_0
@@ -410,7 +374,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [424, 456.0]
+    coordinate: [376, 400.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_vector_1
@@ -428,7 +392,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2008, 720.0]
+    coordinate: [2120, 536.0]
     rotation: 0
     state: enabled
 - name: blocks_threshold_ff_0
@@ -437,16 +401,16 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    high: func_noise_floor+3
+    high: func_probe_noise
     init: '0'
-    low: func_noise_floor+3
+    low: func_probe_noise
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1832, 700.0]
+    coordinate: [1952, 516.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_to_stream_0
@@ -464,7 +428,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1432, 264.0]
+    coordinate: [1376, 280.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_to_stream_0_0
@@ -482,7 +446,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1384, 720.0]
+    coordinate: [1416, 536.0]
     rotation: 0
     state: enabled
 - name: fft_vxx_0
@@ -491,19 +455,19 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    fft_size: '4096'
+    fft_size: vec_len
     forward: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
     nthreads: '1'
     shift: 'True'
     type: complex
-    window: window.blackmanharris(4096)
+    window: window.blackmanharris(vec_len)
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [640, 420.0]
+    coordinate: [592, 364.0]
     rotation: 0
     state: enabled
 - name: probe_noise_floor
@@ -517,7 +481,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2600, 116.0]
+    coordinate: [2376, 276.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -552,7 +516,7 @@ blocks:
     comment: ''
     ctrlpanel: 'False'
     fc: freq
-    fftsize: vec_len
+    fftsize: '4096'
     freqhalf: 'True'
     grid: 'False'
     gui_hint: ''
@@ -570,7 +534,7 @@ blocks:
     legend: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
-    name: '""'
+    name: '"FFT"'
     nconnections: '1'
     norm_window: 'False'
     showports: 'False'
@@ -598,7 +562,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [432, 604.0]
+    coordinate: [488, 532.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_0
@@ -618,8 +582,7 @@ blocks:
     color7: ("black", "black")
     color8: ("black", "black")
     color9: ("black", "black")
-    comment: "The output of this branch is to get \nthe mean noise floor of the \n\
-      entire band every unit of time."
+    comment: ''
     factor1: '1'
     factor10: '1'
     factor2: '1'
@@ -644,7 +607,7 @@ blocks:
     label9: ''
     max: '1'
     min: '-1'
-    name: '"Mean Power Spectral Density"'
+    name: '"Average Noise Floor across Spectrum"'
     nconnections: '1'
     type: float
     unit1: ''
@@ -662,7 +625,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2592, 220.0]
+    coordinate: [2376, 156.0]
     rotation: 0
     state: enabled
 - name: qtgui_vector_sink_f_0
@@ -708,7 +671,7 @@ blocks:
     legend: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
-    name: '"Smoothed Out FFT"'
+    name: '"Average FFT"'
     nconnections: '1'
     ref_level: '0'
     showports: 'False'
@@ -736,10 +699,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2504, 420.0]
+    coordinate: [2392, 340.0]
     rotation: 0
     state: enabled
-- name: qtgui_vector_sink_f_1_0
+- name: qtgui_vector_sink_f_0_0
   id: qtgui_vector_sink_f
   parameters:
     affinity: ''
@@ -755,7 +718,7 @@ blocks:
     alpha8: '1.0'
     alpha9: '1.0'
     autoscale: 'False'
-    average: '0.1'
+    average: '1.0'
     color1: '"blue"'
     color10: '"dark blue"'
     color2: '"red"'
@@ -782,7 +745,7 @@ blocks:
     legend: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
-    name: '"Spectral Occupancy"'
+    name: '""'
     nconnections: '1'
     ref_level: '0'
     showports: 'False'
@@ -804,13 +767,13 @@ blocks:
     x_units: '""'
     y_axis_label: '"y-Axis"'
     y_units: '""'
-    ymax: '1100'
+    ymax: '550'
     ymin: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2520, 684.0]
+    coordinate: [2592, 588.0]
     rotation: 0
     state: enabled
 - name: soapy_limesdr_source_0
@@ -823,7 +786,7 @@ blocks:
     comment: ''
     dev_args: ''
     freq_correction: '0'
-    gain: '0'
+    gain: '20.0'
     maxoutbuf: '0'
     minoutbuf: '0'
     samp_rate: samp_rate
@@ -832,33 +795,33 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 444.0]
+    coordinate: [136, 388.0]
     rotation: 0
     state: enabled
 
 connections:
-- [blocks_add_const_vxx_0, '0', blocks_file_sink_0, '0']
-- [blocks_add_const_vxx_0, '0', qtgui_vector_sink_f_0, '0']
-- [blocks_add_const_vxx_0_0, '0', probe_noise_floor, '0']
-- [blocks_add_const_vxx_0_0, '0', qtgui_number_sink_0, '0']
-- [blocks_add_const_vxx_0_0_0, '0', blocks_threshold_ff_0, '0']
-- [blocks_complex_to_mag_squared_0, '0', blocks_integrate_xx_0_0, '0']
+- [blocks_add_const_vxx_0_0, '0', blocks_file_sink_0_0, '0']
+- [blocks_add_const_vxx_0_0, '0', qtgui_vector_sink_f_0, '0']
+- [blocks_add_const_vxx_0_1, '0', blocks_threshold_ff_0, '0']
+- [blocks_complex_to_mag_squared_0, '0', blocks_integrate_xx_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', blocks_vector_to_stream_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', blocks_vector_to_stream_0_0, '0']
-- [blocks_integrate_xx_0, '0', blocks_multiply_const_xx_1, '0']
-- [blocks_integrate_xx_0_0, '0', blocks_multiply_const_xx_1_0, '0']
-- [blocks_integrate_xx_1, '0', qtgui_vector_sink_f_1_0, '0']
+- [blocks_integrate_xx_0, '0', blocks_multiply_const_xx_0_0_0, '0']
+- [blocks_integrate_xx_0_0, '0', blocks_multiply_const_xx_0_0, '0']
+- [blocks_integrate_xx_1, '0', blocks_file_sink_0_0_0, '0']
+- [blocks_integrate_xx_1, '0', qtgui_vector_sink_f_0_0, '0']
 - [blocks_multiply_const_xx_0, '0', blocks_complex_to_mag_squared_0, '0']
-- [blocks_multiply_const_xx_1, '0', blocks_nlog10_ff_0, '0']
-- [blocks_multiply_const_xx_1_0, '0', blocks_nlog10_ff_0_0, '0']
-- [blocks_nlog10_ff_0, '0', blocks_add_const_vxx_0_0, '0']
-- [blocks_nlog10_ff_0_0, '0', blocks_add_const_vxx_0, '0']
-- [blocks_nlog10_ff_0_0_0, '0', blocks_add_const_vxx_0_0_0, '0']
+- [blocks_multiply_const_xx_0_0, '0', blocks_nlog10_ff_0, '0']
+- [blocks_multiply_const_xx_0_0_0, '0', blocks_nlog10_ff_0_0, '0']
+- [blocks_nlog10_ff_0, '0', probe_noise_floor, '0']
+- [blocks_nlog10_ff_0, '0', qtgui_number_sink_0, '0']
+- [blocks_nlog10_ff_0_0, '0', blocks_add_const_vxx_0_0, '0']
+- [blocks_nlog10_ff_0_1, '0', blocks_add_const_vxx_0_1, '0']
 - [blocks_stream_to_vector_0, '0', fft_vxx_0, '0']
 - [blocks_stream_to_vector_1, '0', blocks_integrate_xx_1, '0']
 - [blocks_threshold_ff_0, '0', blocks_stream_to_vector_1, '0']
-- [blocks_vector_to_stream_0, '0', blocks_integrate_xx_0, '0']
-- [blocks_vector_to_stream_0_0, '0', blocks_nlog10_ff_0_0_0, '0']
+- [blocks_vector_to_stream_0, '0', blocks_integrate_xx_0_0, '0']
+- [blocks_vector_to_stream_0_0, '0', blocks_nlog10_ff_0_1, '0']
 - [fft_vxx_0, '0', blocks_multiply_const_xx_0, '0']
 - [soapy_limesdr_source_0, '0', blocks_stream_to_vector_0, '0']
 - [soapy_limesdr_source_0, '0', qtgui_freq_sink_x_0, '0']
