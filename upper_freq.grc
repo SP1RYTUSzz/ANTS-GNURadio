@@ -22,7 +22,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Not titled yet
+    title: ANTS_Upper_Freq
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -36,13 +36,18 @@ blocks:
 - name: filesink_directory
   id: variable
   parameters:
-    comment: ''
-    value: '"/home/antfarm/Documents/Antman_GNURadio_Code/Results/"'
+    comment: 'Output File Directory
+
+
+      Directory for ANTS Pi 5:
+
+      "/home/antfarm/Documents/Antman_GNURadio_Code/Results/"'
+    value: r"C:\Users\Tri Do\Documents\GitHub\ANTS-GNURadio-data\Example Output"
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1056, 136.0]
+    coordinate: [1760, 640.0]
     rotation: 0
     state: enabled
 - name: freq
@@ -70,19 +75,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1792, 52.0]
+    coordinate: [1000, 0.0]
     rotation: 0
     state: enabled
 - name: lna_makeup_gain
   id: variable
   parameters:
-    comment: ''
+    comment: Gain of selected LNA to be removed from final FFT dBm reading
     value: '-12'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1568, 68.0]
+    coordinate: [784, 344.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -124,7 +129,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2072, 396.0]
+    coordinate: [1184, 624.0]
     rotation: 0
     state: enabled
 - name: blocks_add_const_vxx_0_1
@@ -142,7 +147,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1760, 532.0]
+    coordinate: [640, 856.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_mag_squared_0
@@ -158,7 +163,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1128, 396.0]
+    coordinate: [1064, 152.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0_0
@@ -176,7 +181,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2384, 452.0]
+    coordinate: [1488, 664.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0_0_0
@@ -194,7 +199,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2584, 724.0]
+    coordinate: [1488, 896.0]
     rotation: 0
     state: enabled
 - name: blocks_integrate_xx_0
@@ -212,7 +217,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1384, 396.0]
+    coordinate: [312, 624.0]
     rotation: 0
     state: enabled
 - name: blocks_integrate_xx_0_0
@@ -230,7 +235,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1616, 276.0]
+    coordinate: [544, 464.0]
     rotation: 0
     state: enabled
 - name: blocks_integrate_xx_1
@@ -248,7 +253,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2328, 604.0]
+    coordinate: [1208, 848.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_xx_0
@@ -266,7 +271,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [888, 388.0]
+    coordinate: [824, 144.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_xx_0_0
@@ -284,7 +289,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1832, 276.0]
+    coordinate: [776, 464.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_xx_0_0_0
@@ -302,7 +307,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1616, 396.0]
+    coordinate: [544, 624.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0
@@ -320,7 +325,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2056, 276.0]
+    coordinate: [1248, 432.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0_0
@@ -338,7 +343,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1840, 388.0]
+    coordinate: [768, 616.0]
     rotation: 0
     state: enabled
 - name: blocks_nlog10_ff_0_1
@@ -356,7 +361,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1616, 532.0]
+    coordinate: [496, 856.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_vector_0
@@ -374,7 +379,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [376, 400.0]
+    coordinate: [312, 160.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_vector_1
@@ -392,7 +397,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2120, 536.0]
+    coordinate: [1000, 864.0]
     rotation: 0
     state: enabled
 - name: blocks_threshold_ff_0
@@ -410,7 +415,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1952, 516.0]
+    coordinate: [832, 840.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_to_stream_0
@@ -428,7 +433,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1376, 280.0]
+    coordinate: [312, 472.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_to_stream_0_0
@@ -446,7 +451,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1416, 536.0]
+    coordinate: [312, 864.0]
     rotation: 0
     state: enabled
 - name: fft_vxx_0
@@ -467,7 +472,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [592, 364.0]
+    coordinate: [528, 120.0]
     rotation: 0
     state: enabled
 - name: probe_noise_floor
@@ -481,7 +486,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2376, 276.0]
+    coordinate: [1488, 480.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -562,7 +567,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [488, 532.0]
+    coordinate: [296, 224.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_0
@@ -625,7 +630,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2376, 156.0]
+    coordinate: [1488, 352.0]
     rotation: 0
     state: enabled
 - name: qtgui_vector_sink_f_0
@@ -699,7 +704,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2392, 340.0]
+    coordinate: [1488, 544.0]
     rotation: 0
     state: enabled
 - name: qtgui_vector_sink_f_0_0
@@ -773,7 +778,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2592, 588.0]
+    coordinate: [1488, 784.0]
     rotation: 0
     state: enabled
 - name: soapy_limesdr_source_0
@@ -795,7 +800,33 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [136, 388.0]
+    coordinate: [72, 144.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: FFT_mag
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1320, 152.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: FFT_mag
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 592.0]
     rotation: 0
     state: enabled
 
@@ -803,9 +834,7 @@ connections:
 - [blocks_add_const_vxx_0_0, '0', blocks_file_sink_0_0, '0']
 - [blocks_add_const_vxx_0_0, '0', qtgui_vector_sink_f_0, '0']
 - [blocks_add_const_vxx_0_1, '0', blocks_threshold_ff_0, '0']
-- [blocks_complex_to_mag_squared_0, '0', blocks_integrate_xx_0, '0']
-- [blocks_complex_to_mag_squared_0, '0', blocks_vector_to_stream_0, '0']
-- [blocks_complex_to_mag_squared_0, '0', blocks_vector_to_stream_0_0, '0']
+- [blocks_complex_to_mag_squared_0, '0', virtual_sink_0, '0']
 - [blocks_integrate_xx_0, '0', blocks_multiply_const_xx_0_0_0, '0']
 - [blocks_integrate_xx_0_0, '0', blocks_multiply_const_xx_0_0, '0']
 - [blocks_integrate_xx_1, '0', blocks_file_sink_0_0_0, '0']
@@ -825,6 +854,9 @@ connections:
 - [fft_vxx_0, '0', blocks_multiply_const_xx_0, '0']
 - [soapy_limesdr_source_0, '0', blocks_stream_to_vector_0, '0']
 - [soapy_limesdr_source_0, '0', qtgui_freq_sink_x_0, '0']
+- [virtual_source_0, '0', blocks_integrate_xx_0, '0']
+- [virtual_source_0, '0', blocks_vector_to_stream_0, '0']
+- [virtual_source_0, '0', blocks_vector_to_stream_0_0, '0']
 
 metadata:
   file_format: 1

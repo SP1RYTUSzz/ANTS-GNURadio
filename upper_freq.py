@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: Not titled yet
+# Title: ANTS_Upper_Freq
 # GNU Radio version: 3.10.12.0
 
 from PyQt5 import Qt
@@ -31,9 +31,9 @@ import time
 class upper_freq(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
+        gr.top_block.__init__(self, "ANTS_Upper_Freq", catch_exceptions=True)
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("Not titled yet")
+        self.setWindowTitle("ANTS_Upper_Freq")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -69,7 +69,7 @@ class upper_freq(gr.top_block, Qt.QWidget):
         self.lna_makeup_gain = lna_makeup_gain = -12
         self.func_probe_noise = func_probe_noise = 0
         self.freq = freq = 2.435E+09
-        self.filesink_directory = filesink_directory = "/home/antfarm/Documents/Antman_GNURadio_Code/Results/"
+        self.filesink_directory = filesink_directory = r"C:\Users\Tri Do\Documents\GitHub\ANTS-GNURadio-data\Example Output"
 
         ##################################################
         # Blocks
