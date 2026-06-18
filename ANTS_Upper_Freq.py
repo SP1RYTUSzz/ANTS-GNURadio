@@ -8,6 +8,8 @@
 # Title: Not titled yet
 # GNU Radio version: 3.10.12.0
 
+from PyQt5 import Qt
+from gnuradio import qtgui
 from gnuradio import blocks
 from gnuradio import fft
 from gnuradio.fft import window
@@ -15,20 +17,48 @@ from gnuradio import gr
 from gnuradio.filter import firdes
 import sys
 import signal
+from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 from gnuradio import soapy
+import sip
 import threading
 import time
 
 
 
-
-class ANTS_Upper_Freq(gr.top_block):
+class ANTS_Upper_Freq(gr.top_block, Qt.QWidget):
 
     def __init__(self):
         gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
+        Qt.QWidget.__init__(self)
+        self.setWindowTitle("Not titled yet")
+        qtgui.util.check_set_qss()
+        try:
+            self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
+        except BaseException as exc:
+            print(f"Qt GUI: Could not set Icon: {str(exc)}", file=sys.stderr)
+        self.top_scroll_layout = Qt.QVBoxLayout()
+        self.setLayout(self.top_scroll_layout)
+        self.top_scroll = Qt.QScrollArea()
+        self.top_scroll.setFrameStyle(Qt.QFrame.NoFrame)
+        self.top_scroll_layout.addWidget(self.top_scroll)
+        self.top_scroll.setWidgetResizable(True)
+        self.top_widget = Qt.QWidget()
+        self.top_scroll.setWidget(self.top_widget)
+        self.top_layout = Qt.QVBoxLayout(self.top_widget)
+        self.top_grid_layout = Qt.QGridLayout()
+        self.top_layout.addLayout(self.top_grid_layout)
+
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "ANTS_Upper_Freq")
+
+        try:
+            geometry = self.settings.value("geometry")
+            if geometry:
+                self.restoreGeometry(geometry)
+        except BaseException as exc:
+            print(f"Qt GUI: Could not restore geometry: {str(exc)}", file=sys.stderr)
         self.flowgraph_started = threading.Event()
 
         ##################################################
@@ -41,6 +71,7 @@ class ANTS_Upper_Freq(gr.top_block):
         self.threshold1 = threshold1 = 6
         self.threshold0 = threshold0 = 3
         self.lna_makeup_gain = lna_makeup_gain = -12
+        self.gain = gain = 20
         self.func_probe_noise = func_probe_noise = 0
         self.freq = freq = 2.435E+09
         self.filesink_directory = filesink_directory = r"C:/.ANTS_6-16-26_Test_Results/"
@@ -79,7 +110,216 @@ class ANTS_Upper_Freq(gr.top_block):
         self.soapy_limesdr_source_0.set_bandwidth(0, 0.0)
         self.soapy_limesdr_source_0.set_frequency(0, freq)
         self.soapy_limesdr_source_0.set_frequency_correction(0, 0)
-        self.soapy_limesdr_source_0.set_gain(0, min(max(20.0, -12.0), 61.0))
+        self.soapy_limesdr_source_0.set_gain(0, min(max(gain, -12.0), 61.0))
+        self.qtgui_vector_sink_f_0_0_0_0 = qtgui.vector_sink_f(
+            vec_len,
+            (freq - (samp_rate)/2),
+            (samp_rate/vec_len),
+            "Frequency (Hz)",
+            "Number of sample crossed threshold",
+            "Spectral Occupancy Threshold 2 vs. Frequency",
+            1, # Number of inputs
+            None # parent
+        )
+        self.qtgui_vector_sink_f_0_0_0_0.set_update_time(0.10)
+        self.qtgui_vector_sink_f_0_0_0_0.set_y_axis(0, 600)
+        self.qtgui_vector_sink_f_0_0_0_0.enable_autoscale(False)
+        self.qtgui_vector_sink_f_0_0_0_0.enable_grid(True)
+        self.qtgui_vector_sink_f_0_0_0_0.set_x_axis_units("")
+        self.qtgui_vector_sink_f_0_0_0_0.set_y_axis_units("")
+        self.qtgui_vector_sink_f_0_0_0_0.set_ref_level(0)
+
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+            "magenta", "yellow", "dark red", "dark green", "dark blue"]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_vector_sink_f_0_0_0_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_vector_sink_f_0_0_0_0.set_line_label(i, labels[i])
+            self.qtgui_vector_sink_f_0_0_0_0.set_line_width(i, widths[i])
+            self.qtgui_vector_sink_f_0_0_0_0.set_line_color(i, colors[i])
+            self.qtgui_vector_sink_f_0_0_0_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_vector_sink_f_0_0_0_0_win = sip.wrapinstance(self.qtgui_vector_sink_f_0_0_0_0.qwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_vector_sink_f_0_0_0_0_win, 3, 0, 1, 4)
+        for r in range(3, 4):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(0, 4):
+            self.top_grid_layout.setColumnStretch(c, 1)
+        self.qtgui_vector_sink_f_0_0_0 = qtgui.vector_sink_f(
+            vec_len,
+            (freq - (samp_rate)/2),
+            (samp_rate/vec_len),
+            "Frequency (Hz)",
+            "Number of sample crossed threshold",
+            "Spectral Occupancy Threshold 1 vs. Frequency",
+            1, # Number of inputs
+            None # parent
+        )
+        self.qtgui_vector_sink_f_0_0_0.set_update_time(0.10)
+        self.qtgui_vector_sink_f_0_0_0.set_y_axis(0, 600)
+        self.qtgui_vector_sink_f_0_0_0.enable_autoscale(False)
+        self.qtgui_vector_sink_f_0_0_0.enable_grid(True)
+        self.qtgui_vector_sink_f_0_0_0.set_x_axis_units("")
+        self.qtgui_vector_sink_f_0_0_0.set_y_axis_units("")
+        self.qtgui_vector_sink_f_0_0_0.set_ref_level(0)
+
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+            "magenta", "yellow", "dark red", "dark green", "dark blue"]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_vector_sink_f_0_0_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_vector_sink_f_0_0_0.set_line_label(i, labels[i])
+            self.qtgui_vector_sink_f_0_0_0.set_line_width(i, widths[i])
+            self.qtgui_vector_sink_f_0_0_0.set_line_color(i, colors[i])
+            self.qtgui_vector_sink_f_0_0_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_vector_sink_f_0_0_0_win = sip.wrapinstance(self.qtgui_vector_sink_f_0_0_0.qwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_vector_sink_f_0_0_0_win, 2, 0, 1, 4)
+        for r in range(2, 3):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(0, 4):
+            self.top_grid_layout.setColumnStretch(c, 1)
+        self.qtgui_vector_sink_f_0_0 = qtgui.vector_sink_f(
+            vec_len,
+            (freq - (samp_rate)/2),
+            (samp_rate/vec_len),
+            "Frequency (Hz)",
+            "Number of sample crossed threshold",
+            "Spectral Occupancy Threshold 0 vs. Frequency",
+            1, # Number of inputs
+            None # parent
+        )
+        self.qtgui_vector_sink_f_0_0.set_update_time(0.10)
+        self.qtgui_vector_sink_f_0_0.set_y_axis(0, 600)
+        self.qtgui_vector_sink_f_0_0.enable_autoscale(False)
+        self.qtgui_vector_sink_f_0_0.enable_grid(True)
+        self.qtgui_vector_sink_f_0_0.set_x_axis_units("")
+        self.qtgui_vector_sink_f_0_0.set_y_axis_units("")
+        self.qtgui_vector_sink_f_0_0.set_ref_level(0)
+
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+            "magenta", "yellow", "dark red", "dark green", "dark blue"]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_vector_sink_f_0_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_vector_sink_f_0_0.set_line_label(i, labels[i])
+            self.qtgui_vector_sink_f_0_0.set_line_width(i, widths[i])
+            self.qtgui_vector_sink_f_0_0.set_line_color(i, colors[i])
+            self.qtgui_vector_sink_f_0_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_vector_sink_f_0_0_win = sip.wrapinstance(self.qtgui_vector_sink_f_0_0.qwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_vector_sink_f_0_0_win, 1, 0, 1, 4)
+        for r in range(1, 2):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(0, 4):
+            self.top_grid_layout.setColumnStretch(c, 1)
+        self.qtgui_vector_sink_f_0 = qtgui.vector_sink_f(
+            vec_len,
+            (freq - (samp_rate)/2),
+            (samp_rate/vec_len),
+            "Frequency (Hz)",
+            "Power (dBm)",
+            "Integrated FFT vs. Frequency",
+            1, # Number of inputs
+            None # parent
+        )
+        self.qtgui_vector_sink_f_0.set_update_time(0.10)
+        self.qtgui_vector_sink_f_0.set_y_axis((-140), 10)
+        self.qtgui_vector_sink_f_0.enable_autoscale(False)
+        self.qtgui_vector_sink_f_0.enable_grid(False)
+        self.qtgui_vector_sink_f_0.set_x_axis_units("")
+        self.qtgui_vector_sink_f_0.set_y_axis_units("")
+        self.qtgui_vector_sink_f_0.set_ref_level(0)
+
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ["blue", "red", "green", "black", "cyan",
+            "magenta", "yellow", "dark red", "dark green", "dark blue"]
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_vector_sink_f_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_vector_sink_f_0.set_line_label(i, labels[i])
+            self.qtgui_vector_sink_f_0.set_line_width(i, widths[i])
+            self.qtgui_vector_sink_f_0.set_line_color(i, colors[i])
+            self.qtgui_vector_sink_f_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_vector_sink_f_0_win = sip.wrapinstance(self.qtgui_vector_sink_f_0.qwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_vector_sink_f_0_win, 0, 0, 1, 4)
+        for r in range(0, 1):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(0, 4):
+            self.top_grid_layout.setColumnStretch(c, 1)
+        self.qtgui_number_sink_0 = qtgui.number_sink(
+            gr.sizeof_float,
+            0,
+            qtgui.NUM_GRAPH_VERT,
+            1,
+            None # parent
+        )
+        self.qtgui_number_sink_0.set_update_time(0.10)
+        self.qtgui_number_sink_0.set_title("Average Noise Power across Spectrum")
+
+        labels = ['', '', '', '', '',
+            '', '', '', '', '']
+        units = ['', '', '', '', '',
+            '', '', '', '', '']
+        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
+            ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
+        factor = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+
+        for i in range(1):
+            self.qtgui_number_sink_0.set_min(i, -120)
+            self.qtgui_number_sink_0.set_max(i, 0)
+            self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
+            if len(labels[i]) == 0:
+                self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_number_sink_0.set_label(i, labels[i])
+            self.qtgui_number_sink_0.set_unit(i, units[i])
+            self.qtgui_number_sink_0.set_factor(i, factor[i])
+
+        self.qtgui_number_sink_0.enable_autoscale(False)
+        self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.qwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_number_sink_0_win, 0, 4, 1, 1)
+        for r in range(0, 1):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(4, 5):
+            self.top_grid_layout.setColumnStretch(c, 1)
         self.fft_vxx_0 = fft.fft_vcc(vec_len, True, window.blackmanharris(vec_len), True, 1)
         self.blocks_vector_to_stream_0_0 = blocks.vector_to_stream(gr.sizeof_float*1, vec_len)
         self.blocks_vector_to_stream_0 = blocks.vector_to_stream(gr.sizeof_float*1, vec_len)
@@ -122,7 +362,9 @@ class ANTS_Upper_Freq(gr.top_block):
         ##################################################
         self.connect((self.blocks_add_const_vxx_0, 0), (self.blocks_file_sink_0_1, 0))
         self.connect((self.blocks_add_const_vxx_0, 0), (self.probe_noise_floor, 0))
+        self.connect((self.blocks_add_const_vxx_0, 0), (self.qtgui_number_sink_0, 0))
         self.connect((self.blocks_add_const_vxx_1, 0), (self.blocks_file_sink_0, 0))
+        self.connect((self.blocks_add_const_vxx_1, 0), (self.qtgui_vector_sink_f_0, 0))
         self.connect((self.blocks_add_const_vxx_1_0, 0), (self.blocks_threshold_ff_0, 0))
         self.connect((self.blocks_add_const_vxx_1_0, 0), (self.blocks_threshold_ff_0_0, 0))
         self.connect((self.blocks_add_const_vxx_1_0, 0), (self.blocks_threshold_ff_0_0_0, 0))
@@ -132,8 +374,11 @@ class ANTS_Upper_Freq(gr.top_block):
         self.connect((self.blocks_integrate_xx_0, 0), (self.blocks_multiply_const_xx_1, 0))
         self.connect((self.blocks_integrate_xx_1, 0), (self.blocks_multiply_const_xx_1_0, 0))
         self.connect((self.blocks_integrate_xx_2, 0), (self.blocks_file_sink_0_0, 0))
+        self.connect((self.blocks_integrate_xx_2, 0), (self.qtgui_vector_sink_f_0_0, 0))
         self.connect((self.blocks_integrate_xx_2_0, 0), (self.blocks_file_sink_0_0_0, 0))
+        self.connect((self.blocks_integrate_xx_2_0, 0), (self.qtgui_vector_sink_f_0_0_0, 0))
         self.connect((self.blocks_integrate_xx_2_0_0, 0), (self.blocks_file_sink_0_0_0_0, 0))
+        self.connect((self.blocks_integrate_xx_2_0_0, 0), (self.qtgui_vector_sink_f_0_0_0_0, 0))
         self.connect((self.blocks_multiply_const_xx_0, 0), (self.blocks_complex_to_mag_squared_0, 0))
         self.connect((self.blocks_multiply_const_xx_1, 0), (self.blocks_nlog10_ff_0, 0))
         self.connect((self.blocks_multiply_const_xx_1_0, 0), (self.blocks_nlog10_ff_0_0, 0))
@@ -153,6 +398,14 @@ class ANTS_Upper_Freq(gr.top_block):
         self.connect((self.soapy_limesdr_source_0, 0), (self.blocks_stream_to_vector_0, 0))
 
 
+    def closeEvent(self, event):
+        self.settings = Qt.QSettings("gnuradio/flowgraphs", "ANTS_Upper_Freq")
+        self.settings.setValue("geometry", self.saveGeometry())
+        self.stop()
+        self.wait()
+
+        event.accept()
+
     def get_vec_len(self):
         return self.vec_len
 
@@ -164,6 +417,10 @@ class ANTS_Upper_Freq(gr.top_block):
         self.blocks_multiply_const_xx_1.set_k(1/self.vec_len)
         self.blocks_multiply_const_xx_1_0.set_k(1/self.vec_len)
         self.fft_vxx_0.set_window(window.blackmanharris(self.vec_len))
+        self.qtgui_vector_sink_f_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -171,6 +428,10 @@ class ANTS_Upper_Freq(gr.top_block):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.set_filesink_decimation(round(self.samp_rate / self.vec_len / self.filesink_freq))
+        self.qtgui_vector_sink_f_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
         self.soapy_limesdr_source_0.set_sample_rate(0, self.samp_rate)
 
     def get_filesink_freq(self):
@@ -213,6 +474,13 @@ class ANTS_Upper_Freq(gr.top_block):
         self.blocks_add_const_vxx_1.set_k([self.lna_makeup_gain]*self.vec_len)
         self.blocks_add_const_vxx_1_0.set_k(self.lna_makeup_gain)
 
+    def get_gain(self):
+        return self.gain
+
+    def set_gain(self, gain):
+        self.gain = gain
+        self.soapy_limesdr_source_0.set_gain(0, min(max(self.gain, -12.0), 61.0))
+
     def get_func_probe_noise(self):
         return self.func_probe_noise
 
@@ -230,6 +498,10 @@ class ANTS_Upper_Freq(gr.top_block):
 
     def set_freq(self, freq):
         self.freq = freq
+        self.qtgui_vector_sink_f_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
+        self.qtgui_vector_sink_f_0_0_0_0.set_x_axis((self.freq - (self.samp_rate)/2), (self.samp_rate/self.vec_len))
         self.soapy_limesdr_source_0.set_frequency(0, self.freq)
 
     def get_filesink_directory(self):
@@ -253,22 +525,30 @@ class ANTS_Upper_Freq(gr.top_block):
 
 
 def main(top_block_cls=ANTS_Upper_Freq, options=None):
+
+    qapp = Qt.QApplication(sys.argv)
+
     tb = top_block_cls()
+
+    tb.start()
+    tb.flowgraph_started.set()
+
+    tb.show()
 
     def sig_handler(sig=None, frame=None):
         tb.stop()
         tb.wait()
 
-        sys.exit(0)
+        Qt.QApplication.quit()
 
     signal.signal(signal.SIGINT, sig_handler)
     signal.signal(signal.SIGTERM, sig_handler)
 
-    tb.start()
-    tb.flowgraph_started.set()
+    timer = Qt.QTimer()
+    timer.start(500)
+    timer.timeout.connect(lambda: None)
 
-    tb.wait()
-
+    qapp.exec_()
 
 if __name__ == '__main__':
     main()
