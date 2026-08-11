@@ -25,7 +25,7 @@ import time
 
 
 
-class ANTS_Upper_Freq(gr.top_block):
+class ANTS_Lower_Freq(gr.top_block):
 
     def __init__(self):
         gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
@@ -42,7 +42,7 @@ class ANTS_Upper_Freq(gr.top_block):
         self.threshold0 = threshold0 = 3
         self.lna_makeup_gain = lna_makeup_gain = -12
         self.func_probe_noise = func_probe_noise = 0
-        self.freq = freq = 2.435E+09
+        self.freq = freq = 2.405E+09
         self.filesink_directory = filesink_directory = r"/home/antfarm/Documents/Antman_GNURadio_Code/Results/"
         self.filesink_decimation = filesink_decimation = round(samp_rate / vec_len / filesink_freq)
 
@@ -101,15 +101,15 @@ class ANTS_Upper_Freq(gr.top_block):
         self.blocks_integrate_xx_2 = blocks.integrate_ff(filesink_decimation, vec_len)
         self.blocks_integrate_xx_1 = blocks.integrate_ff(vec_len, 1)
         self.blocks_integrate_xx_0 = blocks.integrate_ff(filesink_decimation, vec_len)
-        self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_float*1, filesink_directory+"avgNF-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_float*1, filesink_directory+"avgNF-lower_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0_1.set_unbuffered(False)
-        self.blocks_file_sink_0_0_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-upper2_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0_0_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-lower2_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0_0_0_0.set_unbuffered(False)
-        self.blocks_file_sink_0_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-upper1_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-lower1_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0_0_0.set_unbuffered(False)
-        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-upper0_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-lower0_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0_0.set_unbuffered(False)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"avgFFT-lower_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(vec_len)
         self.blocks_add_const_vxx_1_0 = blocks.add_const_ff(lna_makeup_gain)
@@ -237,11 +237,11 @@ class ANTS_Upper_Freq(gr.top_block):
 
     def set_filesink_directory(self, filesink_directory):
         self.filesink_directory = filesink_directory
-        self.blocks_file_sink_0.open(self.filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
-        self.blocks_file_sink_0_0.open(self.filesink_directory+"occupancy-upper0_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
-        self.blocks_file_sink_0_0_0.open(self.filesink_directory+"occupancy-upper1_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
-        self.blocks_file_sink_0_0_0_0.open(self.filesink_directory+"occupancy-upper2_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
-        self.blocks_file_sink_0_1.open(self.filesink_directory+"avgNF-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
+        self.blocks_file_sink_0.open(self.filesink_directory+"avgFFT-lower_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
+        self.blocks_file_sink_0_0.open(self.filesink_directory+"occupancy-lower0_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
+        self.blocks_file_sink_0_0_0.open(self.filesink_directory+"occupancy-lower1_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
+        self.blocks_file_sink_0_0_0_0.open(self.filesink_directory+"occupancy-lower2_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
+        self.blocks_file_sink_0_1.open(self.filesink_directory+"avgNF-lower_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
 
     def get_filesink_decimation(self):
         return self.filesink_decimation
@@ -252,7 +252,7 @@ class ANTS_Upper_Freq(gr.top_block):
 
 
 
-def main(top_block_cls=ANTS_Upper_Freq, options=None):
+def main(top_block_cls=ANTS_Lower_Freq, options=None):
     tb = top_block_cls()
 
     def sig_handler(sig=None, frame=None):

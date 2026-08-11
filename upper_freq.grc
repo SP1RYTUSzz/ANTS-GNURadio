@@ -54,7 +54,7 @@ blocks:
       For ANTS Pi5:
 
       "/home/antfarm/Documents/Antman_GNURadio_Code/Results/"'
-    value: r"C:/.ANTS_6-16-26_Test_Results/"
+    value: r"/home/antfarm/Documents/Antman_GNURadio_Code/Results/"
   states:
     bus_sink: false
     bus_source: false
