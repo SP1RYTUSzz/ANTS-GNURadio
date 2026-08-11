@@ -25,7 +25,7 @@ import time
 
 
 
-class ANTS_Lower_Freq(gr.top_block):
+class lower_freq(gr.top_block):
 
     def __init__(self):
         gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
@@ -252,7 +252,7 @@ class ANTS_Lower_Freq(gr.top_block):
 
 
 
-def main(top_block_cls=ANTS_Lower_Freq, options=None):
+def main(top_block_cls=lower_freq, options=None):
     tb = top_block_cls()
 
     def sig_handler(sig=None, frame=None):
