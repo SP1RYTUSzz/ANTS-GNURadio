@@ -43,7 +43,7 @@ class upper_freq(gr.top_block):
         self.lna_makeup_gain = lna_makeup_gain = -12
         self.func_probe_noise = func_probe_noise = 0
         self.freq = freq = 2.435E+09
-        self.filesink_directory = filesink_directory = r"/home/antfarm/Documents/Antman_GNURadio_Code/Results/"
+        self.filesink_directory = filesink_directory = "/home/antfarm/Documents/Antman_GNURadio_Code/Results/"
         self.filesink_decimation = filesink_decimation = round(samp_rate / vec_len / filesink_freq)
 
         ##################################################
