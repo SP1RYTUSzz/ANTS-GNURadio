@@ -37,6 +37,7 @@ class upper_freq(gr.top_block):
         self.vec_len = vec_len = 4096
         self.samp_rate = samp_rate = 30.72E+06
         self.filesink_freq = filesink_freq = 10
+        self.upper_or_lower = upper_or_lower = "upper"
         self.threshold2 = threshold2 = 10
         self.threshold1 = threshold1 = 6
         self.threshold0 = threshold0 = 3
@@ -179,6 +180,12 @@ class upper_freq(gr.top_block):
     def set_filesink_freq(self, filesink_freq):
         self.filesink_freq = filesink_freq
         self.set_filesink_decimation(round(self.samp_rate / self.vec_len / self.filesink_freq))
+
+    def get_upper_or_lower(self):
+        return self.upper_or_lower
+
+    def set_upper_or_lower(self, upper_or_lower):
+        self.upper_or_lower = upper_or_lower
 
     def get_threshold2(self):
         return self.threshold2
