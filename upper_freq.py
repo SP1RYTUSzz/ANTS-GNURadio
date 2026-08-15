@@ -109,7 +109,7 @@ class upper_freq(gr.top_block):
         self.blocks_file_sink_0_0_0.set_unbuffered(False)
         self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-upper0_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0_0.set_unbuffered(False)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"meanPS-dB-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(vec_len)
         self.blocks_add_const_vxx_1 = blocks.add_const_vff([lna_makeup_gain_dB]*vec_len)
@@ -245,7 +245,7 @@ class upper_freq(gr.top_block):
 
     def set_filesink_directory(self, filesink_directory):
         self.filesink_directory = filesink_directory
-        self.blocks_file_sink_0.open(self.filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
+        self.blocks_file_sink_0.open(self.filesink_directory+"meanPS-dB-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
         self.blocks_file_sink_0_0.open(self.filesink_directory+"occupancy-upper0_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
         self.blocks_file_sink_0_0_0.open(self.filesink_directory+"occupancy-upper1_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
         self.blocks_file_sink_0_0_0_0.open(self.filesink_directory+"occupancy-upper2_"+__import__("time").strftime("%Y%m%d_%H")+".bin")

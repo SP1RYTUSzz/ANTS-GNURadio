@@ -253,7 +253,7 @@ blocks:
     alias: ''
     append: 'True'
     comment: Time-averaged Power Spectrum
-    file: filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
+    file: filesink_directory+"meanPS-dB-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
     type: float
     unbuffered: 'False'
     vlen: vec_len
