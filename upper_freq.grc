@@ -59,7 +59,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1496, 16.0]
+    coordinate: [1416, 16.0]
     rotation: 0
     state: enabled
 - name: filesink_freq
@@ -83,13 +83,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 80.0]
+    coordinate: [128, 120.0]
     rotation: 0
     state: enabled
 - name: func_probe_noise
   id: variable_function_probe
   parameters:
-    block_id: probe_noise_floor
+    block_id: probe_noise_power
     comment: ''
     function_args: ''
     function_name: level
@@ -102,7 +102,7 @@ blocks:
     coordinate: [200, 728.0]
     rotation: 0
     state: enabled
-- name: lna_makeup_gain
+- name: lna_makeup_gain_dB
   id: variable
   parameters:
     comment: 'Set LNA gain here.
@@ -113,7 +113,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 16.0]
+    coordinate: [1120, 24.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -125,7 +125,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 16.0]
+    coordinate: [48, 120.0]
     rotation: 0
     state: enabled
 - name: threshold0_dB
@@ -178,7 +178,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [936, 8.0]
+    coordinate: [240, 16.0]
     rotation: 0
     state: enabled
 - name: vec_len
@@ -191,7 +191,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [640, 16.0]
+    coordinate: [568, 16.0]
     rotation: 0
     state: enabled
 - name: blocks_add_const_vxx_0
@@ -200,7 +200,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: lna_makeup_gain
+    const: lna_makeup_gain_dB
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
@@ -218,7 +218,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: '[lna_makeup_gain]*vec_len'
+    const: '[lna_makeup_gain_dB]*vec_len'
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
@@ -252,7 +252,7 @@ blocks:
     affinity: ''
     alias: ''
     append: 'True'
-    comment: ''
+    comment: Time-averaged Power Spectrum
     file: filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
     type: float
     unbuffered: 'False'
@@ -261,7 +261,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1488, 456.0]
+    coordinate: [1488, 448.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0_0
@@ -270,7 +270,7 @@ blocks:
     affinity: ''
     alias: ''
     append: 'True'
-    comment: ''
+    comment: Spectral Threshold Occupancy 0
     file: filesink_directory+"occupancy-upper0_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
     type: float
     unbuffered: 'False'
@@ -288,7 +288,7 @@ blocks:
     affinity: ''
     alias: ''
     append: 'True'
-    comment: ''
+    comment: Spectral Threshold Occupancy 1
     file: filesink_directory+"occupancy-upper1_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
     type: float
     unbuffered: 'False'
@@ -306,7 +306,7 @@ blocks:
     affinity: ''
     alias: ''
     append: 'True'
-    comment: ''
+    comment: Spectral Threshold Occupancy 2
     file: filesink_directory+"occupancy-upper2_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
     type: float
     unbuffered: 'False'
@@ -324,8 +324,8 @@ blocks:
     affinity: ''
     alias: ''
     append: 'True'
-    comment: ''
-    file: filesink_directory+"avgNF-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
+    comment: Per-Frame Averaged Noise Spectral Power
+    file: filesink_directory+"AvgNP-dB-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin"
     type: float
     unbuffered: 'False'
     vlen: '1'
@@ -333,7 +333,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1488, 360.0]
+    coordinate: [1488, 328.0]
     rotation: 0
     state: enabled
 - name: blocks_integrate_xx_0
@@ -341,7 +341,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: Time-averaged Power Spectrum
     decim: filesink_decimation
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -467,7 +467,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: 1/vec_len
     const: 1/vec_len
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -597,9 +597,9 @@ blocks:
       to linear power and compare
 
       10**((func_probe_noise + threshold0_dB - lna_makeup_gain)/10)'
-    high: 10**((func_probe_noise + threshold0_dB - lna_makeup_gain)/10)
+    high: 10**((func_probe_noise + threshold0_dB - lna_makeup_gain_dB)/10)
     init: '0'
-    low: 10**((func_probe_noise + threshold0_dB - lna_makeup_gain)/10)
+    low: 10**((func_probe_noise + threshold0_dB - lna_makeup_gain_dB)/10)
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -615,9 +615,9 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    high: 10**((func_probe_noise + threshold1_dB - lna_makeup_gain)/10)
+    high: 10**((func_probe_noise + threshold1_dB - lna_makeup_gain_dB)/10)
     init: '0'
-    low: 10**((func_probe_noise + threshold1_dB - lna_makeup_gain)/10)
+    low: 10**((func_probe_noise + threshold1_dB - lna_makeup_gain_dB)/10)
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -633,9 +633,9 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    high: 10**((func_probe_noise + threshold2_dB - lna_makeup_gain)/10)
+    high: 10**((func_probe_noise + threshold2_dB - lna_makeup_gain_dB)/10)
     init: '0'
-    low: 10**((func_probe_noise + threshold2_dB - lna_makeup_gain)/10)
+    low: 10**((func_probe_noise + threshold2_dB - lna_makeup_gain_dB)/10)
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -702,7 +702,7 @@ blocks:
     coordinate: [592, 160.0]
     rotation: 0
     state: enabled
-- name: probe_noise_floor
+- name: probe_noise_power
   id: blocks_probe_signal_x
   parameters:
     affinity: ''
@@ -713,7 +713,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1488, 312.0]
+    coordinate: [1488, 280.0]
     rotation: 0
     state: enabled
 - name: soapy_limesdr_source_0
@@ -767,7 +767,7 @@ blocks:
 
 connections:
 - [blocks_add_const_vxx_0, '0', blocks_file_sink_0_1, '0']
-- [blocks_add_const_vxx_0, '0', probe_noise_floor, '0']
+- [blocks_add_const_vxx_0, '0', probe_noise_power, '0']
 - [blocks_add_const_vxx_1, '0', blocks_file_sink_0, '0']
 - [blocks_complex_to_mag_squared_0, '0', virtual_sink_0, '0']
 - [blocks_integrate_xx_0, '0', blocks_multiply_const_xx_1, '0']

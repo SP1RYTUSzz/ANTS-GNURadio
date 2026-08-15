@@ -41,7 +41,7 @@ class upper_freq(gr.top_block):
         self.threshold2_dB = threshold2_dB = 10
         self.threshold1_dB = threshold1_dB = 6
         self.threshold0_dB = threshold0_dB = 3
-        self.lna_makeup_gain = lna_makeup_gain = -12
+        self.lna_makeup_gain_dB = lna_makeup_gain_dB = -12
         self.func_probe_noise = func_probe_noise = 0
         self.freq = freq = 2.435E+09
         self.filesink_directory = filesink_directory = r"/home/antfarm/Documents/Antman_GNURadio_Code/Results/"
@@ -51,12 +51,12 @@ class upper_freq(gr.top_block):
         # Blocks
         ##################################################
 
-        self.probe_noise_floor = blocks.probe_signal_f()
+        self.probe_noise_power = blocks.probe_signal_f()
         def _func_probe_noise_probe():
           self.flowgraph_started.wait()
           while True:
 
-            val = self.probe_noise_floor.level()
+            val = self.probe_noise_power.level()
             try:
               try:
                 self.doc.add_next_tick_callback(functools.partial(self.set_func_probe_noise,val))
@@ -84,9 +84,9 @@ class upper_freq(gr.top_block):
         self.fft_vxx_0 = fft.fft_vcc(vec_len, True, window.blackmanharris(vec_len), True, 1)
         self.blocks_vector_to_stream_0_0 = blocks.vector_to_stream(gr.sizeof_float*1, vec_len)
         self.blocks_vector_to_stream_0 = blocks.vector_to_stream(gr.sizeof_float*1, vec_len)
-        self.blocks_threshold_ff_0_0_0 = blocks.threshold_ff((10**((func_probe_noise + threshold2_dB - lna_makeup_gain)/10)), (10**((func_probe_noise + threshold2_dB - lna_makeup_gain)/10)), 0)
-        self.blocks_threshold_ff_0_0 = blocks.threshold_ff((10**((func_probe_noise + threshold1_dB - lna_makeup_gain)/10)), (10**((func_probe_noise + threshold1_dB - lna_makeup_gain)/10)), 0)
-        self.blocks_threshold_ff_0 = blocks.threshold_ff((10**((func_probe_noise + threshold0_dB - lna_makeup_gain)/10)), (10**((func_probe_noise + threshold0_dB - lna_makeup_gain)/10)), 0)
+        self.blocks_threshold_ff_0_0_0 = blocks.threshold_ff((10**((func_probe_noise + threshold2_dB - lna_makeup_gain_dB)/10)), (10**((func_probe_noise + threshold2_dB - lna_makeup_gain_dB)/10)), 0)
+        self.blocks_threshold_ff_0_0 = blocks.threshold_ff((10**((func_probe_noise + threshold1_dB - lna_makeup_gain_dB)/10)), (10**((func_probe_noise + threshold1_dB - lna_makeup_gain_dB)/10)), 0)
+        self.blocks_threshold_ff_0 = blocks.threshold_ff((10**((func_probe_noise + threshold0_dB - lna_makeup_gain_dB)/10)), (10**((func_probe_noise + threshold0_dB - lna_makeup_gain_dB)/10)), 0)
         self.blocks_stream_to_vector_1_0_0 = blocks.stream_to_vector(gr.sizeof_float*1, vec_len)
         self.blocks_stream_to_vector_1_0 = blocks.stream_to_vector(gr.sizeof_float*1, vec_len)
         self.blocks_stream_to_vector_1 = blocks.stream_to_vector(gr.sizeof_float*1, vec_len)
@@ -101,7 +101,7 @@ class upper_freq(gr.top_block):
         self.blocks_integrate_xx_2 = blocks.integrate_ff(filesink_decimation, vec_len)
         self.blocks_integrate_xx_1 = blocks.integrate_ff(vec_len, 1)
         self.blocks_integrate_xx_0 = blocks.integrate_ff(filesink_decimation, vec_len)
-        self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_float*1, filesink_directory+"avgNF-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
+        self.blocks_file_sink_0_1 = blocks.file_sink(gr.sizeof_float*1, filesink_directory+"AvgNP-dB-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0_1.set_unbuffered(False)
         self.blocks_file_sink_0_0_0_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"occupancy-upper2_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0_0_0_0.set_unbuffered(False)
@@ -112,15 +112,15 @@ class upper_freq(gr.top_block):
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*vec_len, filesink_directory+"avgFFT-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin", True)
         self.blocks_file_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(vec_len)
-        self.blocks_add_const_vxx_1 = blocks.add_const_vff([lna_makeup_gain]*vec_len)
-        self.blocks_add_const_vxx_0 = blocks.add_const_ff(lna_makeup_gain)
+        self.blocks_add_const_vxx_1 = blocks.add_const_vff([lna_makeup_gain_dB]*vec_len)
+        self.blocks_add_const_vxx_0 = blocks.add_const_ff(lna_makeup_gain_dB)
 
 
         ##################################################
         # Connections
         ##################################################
         self.connect((self.blocks_add_const_vxx_0, 0), (self.blocks_file_sink_0_1, 0))
-        self.connect((self.blocks_add_const_vxx_0, 0), (self.probe_noise_floor, 0))
+        self.connect((self.blocks_add_const_vxx_0, 0), (self.probe_noise_power, 0))
         self.connect((self.blocks_add_const_vxx_1, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_integrate_xx_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_vector_to_stream_0, 0))
@@ -156,7 +156,7 @@ class upper_freq(gr.top_block):
     def set_vec_len(self, vec_len):
         self.vec_len = vec_len
         self.set_filesink_decimation(round(self.samp_rate / self.vec_len / self.filesink_freq))
-        self.blocks_add_const_vxx_1.set_k([self.lna_makeup_gain]*self.vec_len)
+        self.blocks_add_const_vxx_1.set_k([self.lna_makeup_gain_dB]*self.vec_len)
         self.blocks_multiply_const_xx_0.set_k(1/self.vec_len)
         self.blocks_multiply_const_xx_1.set_k(1/self.vec_len)
         self.blocks_multiply_const_xx_1_0.set_k(1/self.vec_len)
@@ -188,50 +188,50 @@ class upper_freq(gr.top_block):
 
     def set_threshold2_dB(self, threshold2_dB):
         self.threshold2_dB = threshold2_dB
-        self.blocks_threshold_ff_0_0_0.set_hi((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0_0.set_lo((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain)/10)))
+        self.blocks_threshold_ff_0_0_0.set_hi((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0_0.set_lo((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain_dB)/10)))
 
     def get_threshold1_dB(self):
         return self.threshold1_dB
 
     def set_threshold1_dB(self, threshold1_dB):
         self.threshold1_dB = threshold1_dB
-        self.blocks_threshold_ff_0_0.set_hi((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0.set_lo((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain)/10)))
+        self.blocks_threshold_ff_0_0.set_hi((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0.set_lo((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain_dB)/10)))
 
     def get_threshold0_dB(self):
         return self.threshold0_dB
 
     def set_threshold0_dB(self, threshold0_dB):
         self.threshold0_dB = threshold0_dB
-        self.blocks_threshold_ff_0.set_hi((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0.set_lo((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain)/10)))
+        self.blocks_threshold_ff_0.set_hi((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0.set_lo((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain_dB)/10)))
 
-    def get_lna_makeup_gain(self):
-        return self.lna_makeup_gain
+    def get_lna_makeup_gain_dB(self):
+        return self.lna_makeup_gain_dB
 
-    def set_lna_makeup_gain(self, lna_makeup_gain):
-        self.lna_makeup_gain = lna_makeup_gain
-        self.blocks_add_const_vxx_0.set_k(self.lna_makeup_gain)
-        self.blocks_add_const_vxx_1.set_k([self.lna_makeup_gain]*self.vec_len)
-        self.blocks_threshold_ff_0.set_hi((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0.set_lo((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0.set_hi((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0.set_lo((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0_0.set_hi((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0_0.set_lo((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain)/10)))
+    def set_lna_makeup_gain_dB(self, lna_makeup_gain_dB):
+        self.lna_makeup_gain_dB = lna_makeup_gain_dB
+        self.blocks_add_const_vxx_0.set_k(self.lna_makeup_gain_dB)
+        self.blocks_add_const_vxx_1.set_k([self.lna_makeup_gain_dB]*self.vec_len)
+        self.blocks_threshold_ff_0.set_hi((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0.set_lo((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0.set_hi((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0.set_lo((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0_0.set_hi((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0_0.set_lo((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain_dB)/10)))
 
     def get_func_probe_noise(self):
         return self.func_probe_noise
 
     def set_func_probe_noise(self, func_probe_noise):
         self.func_probe_noise = func_probe_noise
-        self.blocks_threshold_ff_0.set_hi((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0.set_lo((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0.set_hi((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0.set_lo((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0_0.set_hi((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain)/10)))
-        self.blocks_threshold_ff_0_0_0.set_lo((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain)/10)))
+        self.blocks_threshold_ff_0.set_hi((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0.set_lo((10**((self.func_probe_noise + self.threshold0_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0.set_hi((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0.set_lo((10**((self.func_probe_noise + self.threshold1_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0_0.set_hi((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain_dB)/10)))
+        self.blocks_threshold_ff_0_0_0.set_lo((10**((self.func_probe_noise + self.threshold2_dB - self.lna_makeup_gain_dB)/10)))
 
     def get_freq(self):
         return self.freq
@@ -249,7 +249,7 @@ class upper_freq(gr.top_block):
         self.blocks_file_sink_0_0.open(self.filesink_directory+"occupancy-upper0_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
         self.blocks_file_sink_0_0_0.open(self.filesink_directory+"occupancy-upper1_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
         self.blocks_file_sink_0_0_0_0.open(self.filesink_directory+"occupancy-upper2_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
-        self.blocks_file_sink_0_1.open(self.filesink_directory+"avgNF-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
+        self.blocks_file_sink_0_1.open(self.filesink_directory+"AvgNP-dB-upper_"+__import__("time").strftime("%Y%m%d_%H")+".bin")
 
     def get_filesink_decimation(self):
         return self.filesink_decimation
